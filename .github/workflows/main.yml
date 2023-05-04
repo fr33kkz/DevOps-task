@@ -34,11 +34,11 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t gcr.io/${{ env.GCP_PROJECT_ID }}/product-catalogue:${{ github.sha }} .
+        docker build -t gcr.io/${{ env.GCP_PROJECT_ID }}/productcatalogue:${{ github.sha }} .
 
     - name: Push Docker image to GCR
       run: |
-        docker push gcr.io/${{ env.GCP_PROJECT_ID }}/product-catalogue:${{ github.sha }}
+        docker push gcr.io/${{ env.GCP_PROJECT_ID }}/productcatalogue:${{ github.sha }}
 
     - name: Install or upgrade the microservice using Helm chart
       run: |
