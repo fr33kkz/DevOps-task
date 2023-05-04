@@ -1,4 +1,4 @@
-name: CI/CD for product catalogue
+name: CI/CD for shop front
 
 on:
   push:
