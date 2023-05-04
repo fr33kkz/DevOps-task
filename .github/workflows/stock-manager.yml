@@ -1,0 +1,44 @@
+name: CI/CD for stock manager
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  GCP_PROJECT_ID: devopss-task
+  GCP_COMPUTE_ZONE: us-central1	
+  GCP_CLUSTER_NAME: devops-task
+  
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up gcloud
+      uses: google-github-actions/setup-gcloud@v0.2.0
+      with:
+        service_account_key: ${{ secrets.GCP_SECRET_KEY }}
+        project_id: ${{ env.GCP_PROJECT_ID }}
+        compute_zone: ${{ env.GCP_COMPUTE_ZONE }}
+        cluster_name: ${{ env.GCP_CLUSTER_NAME }}
+        
+    - name: Login to Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: gcr.io
+        username: _json_key
+        password: ${{ secrets.GCP_SECRET_KEY }}
+
+    - name: Build Docker image
+      run: |
+        docker build -t gcr.io/${{ env.GCP_PROJECT_ID }}/stockmanager:${{ github.sha }} ./stockmanager
+        
+    - name: Push Docker image to GCR
+      run: |
+        docker push gcr.io/${{ env.GCP_PROJECT_ID }}/stockmanager:${{ github.sha }}
+    - name: Install or upgrade the microservice using Helm chart
+      run: |
+        helm upgrade stockmanager ./stock-charts --set image.tag=${{ github.sha }} --install
