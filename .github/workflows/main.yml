@@ -8,7 +8,7 @@ env:
   GCP_PROJECT_ID: devopss-task
   GCP_COMPUTE_ZONE: us-central1	
   GCP_CLUSTER_NAME: devops-task	
-  
+  IMAGE_NAME: product
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -18,12 +18,13 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up gcloud
-      uses: google-github-actions/setup-gcloud@v0.2.0
+      uses: google-github-actions/setup-gcloud@master
       with:
         service_account_key: ${{ secrets.GCP_SECRET_KEY }}
         project_id: ${{ env.GCP_PROJECT_ID }}
         compute_zone: ${{ env.GCP_COMPUTE_ZONE }}
         cluster_name: ${{ env.GCP_CLUSTER_NAME }}
+        export_default_credentials: true
 
     - name: Login to Container Registry
       uses: docker/login-action@v1
@@ -34,7 +35,12 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t productcatalogue:${{ github.sha }} .
+        docker build -t $IMAGE_NAME:latest .
+        
+    - name: Configure Docker client
+      run: |-
+        gcloud auth configure-docker --quiet
+        
 
     - name: Push Docker image to GCR
       run: |
