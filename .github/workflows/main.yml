@@ -20,7 +20,7 @@ jobs:
     - name: Set up gcloud
       uses: google-github-actions/setup-gcloud@v0.2.0
       with:
-        service_account_key: ${{ secrets.private_key }}
+        service_account_key: ${{ secrets.GCP_SECRET_KEY }}
         project_id: ${{ env.GCP_PROJECT_ID }}
         compute_zone: ${{ env.GCP_COMPUTE_ZONE }}
         cluster_name: ${{ env.GCP_CLUSTER_NAME }}
@@ -30,7 +30,7 @@ jobs:
       with:
         registry: gcr.io
         username: _json_key
-        password: ${{ secrets.private_key }}
+        password: ${{ secrets.GCP_SECRET_KEY }}
 
     - name: Build Docker image
       run: |
