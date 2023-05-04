@@ -1,0 +1,5 @@
+apiVersion: v2
+name: productcatalogue
+description: Helm chart for deploying the productcatalogue microservice
+version: 1.0.0
+appVersion: 1.0.0
