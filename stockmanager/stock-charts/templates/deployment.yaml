@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "stock-charts.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "stock-charts.name" . }}
+    helm.sh/chart: {{ include "stock-charts.chart" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "stock-charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "stock-charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: [ "java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar", "server" ]
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      nodeSelector: {{ toYaml .Values.nodeSelector | indent 8 }}
+      tolerations: {{ toYaml .Values.tolerations | indent 8 }}
+      affinity: {{ toYaml .Values.affinity | indent 8 }}

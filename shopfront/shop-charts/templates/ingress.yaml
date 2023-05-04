@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ template "shop-charts.fullname" . }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - {{ .Values.ingress.hosts }}
+      secretName: {{ template "shop-charts.fullname" . }}-tls
+  rules:
+    - host: {{ .Values.ingress.hosts }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "shop-charts.fullname" . }}
+                port:
+                  name: http

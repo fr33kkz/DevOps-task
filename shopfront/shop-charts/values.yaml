@@ -1,14 +1,14 @@
 replicaCount: 1
 
 image:
-  repository: gcr.io/devopss-task/productcatalogue
+  repository: gcr.io/devopss-task/shopfront
   tag: latest
   pullPolicy: IfNotPresent
 
 service:
-  name: product-catalogue
+  name: shop-front
   type: ClusterIP
-  port: 8020
+  port: 8010
 
 ingress:
   enabled: true
@@ -19,7 +19,7 @@ ingress:
     - host: example.com
       paths: ['/']
   tls:
-    - secretName: product-catalogue-tls
+    - secretName: shop-front-tls
       hosts:
         - example.com
 resources:

@@ -1,14 +1,14 @@
 replicaCount: 1
 
 image:
-  repository: gcr.io/devopss-task/productcatalogue
+  repository: gcr.io/devopss-task/stockmanager
   tag: latest
   pullPolicy: IfNotPresent
 
 service:
-  name: product-catalogue
+  name: stock-manager
   type: ClusterIP
-  port: 8020
+  port: 8030
 
 ingress:
   enabled: true
@@ -19,7 +19,7 @@ ingress:
     - host: example.com
       paths: ['/']
   tls:
-    - secretName: product-catalogue-tls
+    - secretName: stock-manager-tls
       hosts:
         - example.com
 resources:

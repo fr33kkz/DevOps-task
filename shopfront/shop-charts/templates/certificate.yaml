@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: {{ template "shop-charts.fullname" . }}-tls
+spec:
+  secretName: {{ template "shop-charts.fullname" . }}-tls
+  duration: 2160h
+  renewBefore: 360h
+  commonName: {{ .Values.ingress.hosts }}
+  dnsNames:
+    - {{ .Values.ingress.hosts }}
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-prod
