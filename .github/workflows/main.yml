@@ -42,4 +42,4 @@ jobs:
 
     - name: Install or upgrade the microservice using Helm chart
       run: |
-        helm upgrade product-catalogue ./product-catalogue-chart --set image.tag=${{ github.sha }} --install
+        helm upgrade productcatalogue ./product-charts --set image.tag=${{ github.sha }} --install
