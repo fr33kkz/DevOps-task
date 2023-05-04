@@ -34,7 +34,7 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t gcr.io/${{ env.GCP_PROJECT_ID }}/devops/productcatalogue:${{ github.sha }} .
+        docker build -t gcr.io/${{ env.GCP_PROJECT_ID }}/productcatalogue:${{ github.sha }} .
 
     - name: Push Docker image to GCR
       run: |
